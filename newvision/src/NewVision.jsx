@@ -7,18 +7,19 @@ class NewVision extends Component {
         this.state = {
             data: [],
             thresholdData: [],
-            threshold: 66
+            threshold: 60
         };
 
         this.updateResults = this.updateResults.bind(this);
+        this.updateThreshold = this.updateThreshold.bind(this);
     }
 
     componentDidMount() {
         // Mounted, populate our data with the students
-        this.setState({data: students});
+        this.setState({data: students}, ()=>this.updateResults());
     }
 
-    updateResults(e) {
+    updateResults() {
         // Empty the array to repopulate to reflect updated threshold values
         var temp = []
         
@@ -32,13 +33,22 @@ class NewVision extends Component {
         this.setState({thresholdData : temp});
     }
 
+    // Threshold value changed, lets update it!
+    updateThreshold(e) {
+        this.setState({threshold: e.target.value}, ()=>this.updateResults());
+    }
+
     render() {
         return(
             <div>
                 <h1>New Vision for Public Schools</h1>
                 <hr />
 
-                <button onClick={this.updateResults}>test</button>
+                <div>
+                    <label htmlFor="customRange2">Threshold: {this.state.threshold}</label>
+                    <br />
+                    <input type="range" className="custom-range w-50" min="0" max="100" id="customRange2" value={this.state.threshold} onChange={this.updateThreshold} />
+                </div>
                 
                 <div>
                     <table className="table">
@@ -48,6 +58,9 @@ class NewVision extends Component {
                                 <th scope="col">First</th>
                                 <th scope="col">Last</th>
                                 <th scope="col">Attendance</th>
+                                <th scope="col">Home Number</th>
+                                <th scope="col">Passed Regents?</th>
+                                <th scope="col">Guidance Counselor Email</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,6 +70,9 @@ class NewVision extends Component {
                                     <td>{item.firstName}</td>
                                     <td>{item.lastName}</td>
                                     <td>{item.attendancePercentage}</td>
+                                    <td>{item.homePhoneNumber}</td>
+                                    <td>{String(item.hasPassedRegents)}</td>
+                                    <td>{item.guidanceCounselorEmail}</td>
                                 </tr>
                             ))}
                         </tbody>
